@@ -1,1 +1,1 @@
-This project contains scripts with the main objective of analyzing text complexity in MECO's texts. For this purpose, we use universal dependencies (UD) measures. Created by Dalmo Buzato (Federal University of Minas Gerais).
+This project contains scripts with the main objective of analyzing text complexity in MECO's texts. For this purpose, we use universal dependencies (UD) measures. Coded by Dalmo Buzato (Federal University of Minas Gerais).
