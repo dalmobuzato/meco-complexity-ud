@@ -69,7 +69,7 @@ for (i in 1:nrow(d)) {
       num_noun = sum(NOUN),
       num_verbs = sum(VERB),
       ratio = sum(NOUN) / sum(VERB),
-      language = "english-l2",  # Assuming the language is English
+      language = "english-l2",  
       column_name = paste0("line_", i)
     ) 
   
@@ -113,7 +113,7 @@ for (i in 1:nrow(d)) {
       num_types = length(unique(token)),
       num_tokens = n(),
       ratio = length(unique(token)) / n(),
-      language = "english",  # Assuming the language is English
+      language = "english-l2",  
       column_name = paste0("line_", i)
     )
   
@@ -156,7 +156,7 @@ for (i in 1:nrow(d)) {
     summarise(
       num_p_types = length(unique(upos)),
       ttr_p = length(unique(upos)) / n(),
-      language = "english_l2",  # Assuming the language is English
+      language = "english-l2",  
       column_name = paste0("line_", i)
     )
   
@@ -198,7 +198,7 @@ for (i in 1:nrow(d)) {
     summarise(
       num_d_types = length(unique(dep_rel)),
       ttr_d = length(unique(dep_rel)) / n(),
-      language = "english",  # Assuming the language is English
+      language = "english-l2", 
       column_name = paste0("line_", i)
     )
   
@@ -243,7 +243,7 @@ for (i in 1:nrow(d)) {
   head_token_counts <- head_token_counts %>%
     mutate(
       d_ratio = 1 - (n_heads / n_tokens),
-      language = "english",  # Assuming the language is English
+      language = "english-l2",  
       column_name = paste0("line_", i)
     )
   
@@ -287,7 +287,7 @@ for (i in 1:nrow(d)) {
     group_by(sentence_id) %>%
     summarise(
       mlu = mean(length(unique(token_id))),
-      language = "english",  # Assuming the language is English
+      language = "english-l2",  
       column_name = paste0("line_", i)
     )
   
@@ -347,7 +347,7 @@ for (i in 1:nrow(d)) {
     embeddedness_sentence,
     tibble(
       sentence_id = unique(df_complexity$sentence_id),
-      language = "english",  # Assuming the language is English
+      language = "english-l2",  
       embeddedness = embeddedness,
       num_complex_sentences = num_complex_sentences,
       num_simplex_sentences = num_simplex_sentences,
@@ -414,7 +414,7 @@ for (i in 1:nrow(d)) {
     depth_data,
     tibble(
       column_name = paste0("line_", i),
-      language = "english",  # Assuming the language is English
+      language = "english-l2",  
       sentence_id = my_depth$sentence_id,
       depth = my_depth$depth
     )
