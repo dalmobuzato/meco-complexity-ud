@@ -33,7 +33,7 @@ for (column_name in column_names) {
 }
 
 # English: Create a language model and udpipe texts 
-model_english <- udpipe_download_model(language = "english") 
+model_english <- udpipe_download_model(language = "english-gum") 
 model_english <- udpipe_load_model(file = model_english$file_model)
 
 for (name in column_names) {
