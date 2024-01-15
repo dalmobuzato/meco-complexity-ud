@@ -5,7 +5,8 @@ library(tidyverse)
 library(igraph)
 
 # Load the RDA file
-load("C:/Users/buzat/Desktop/meco-complexity-ud/texts.meco.l2 (1).rda")
+#load("C:/Users/buzat/Desktop/meco-complexity-ud/texts.meco.l2 (1).rda")
+load("texts.meco.l2.rda")
 
 # Keep only the "text" column in the dataframe
 d <- d[, "text", drop = FALSE]
@@ -34,7 +35,7 @@ noun_to_verb_sentence <- tibble(
   sentence_id = character(),
   num_noun = integer(),
   num_verbs = integer(),
-  ratio = double(),
+  n_v_ratio = double(),
   language = character(),
   column_name = character()
 )
@@ -68,7 +69,7 @@ for (i in 1:nrow(d)) {
     summarise(
       num_noun = sum(NOUN),
       num_verbs = sum(VERB),
-      ratio = sum(NOUN) / sum(VERB),
+      n_v_ratio = sum(NOUN) / sum(VERB),
       language = "english-l2",  
       column_name = paste0("line_", i)
     ) 
@@ -363,7 +364,7 @@ embeddedness_sentence <- embeddedness_sentence %>%
 
 # ------------------------ Longest dependency path (LDP) ----------------------------
 # Create an empty data frame to store the results
-depth_data <- tibble(
+depth_data_sentence <- tibble(
   column_name = character(),
   language = character(),
   sentence_id = integer(),
@@ -410,8 +411,8 @@ for (i in 1:nrow(d)) {
   my_depth$sentence_id <- as.numeric(substr(my_depth$doc_sent_id, 1 + regexpr(pattern = "_", text = my_depth$doc_sent_id), nchar(my_depth$doc_sent_id)))
   
   # Add information to depth_data
-  depth_data <- bind_rows(
-    depth_data,
+  depth_data_sentence <- bind_rows(
+    depth_data_sentence,
     tibble(
       column_name = paste0("line_", i),
       language = "english-l2",  
@@ -420,3 +421,28 @@ for (i in 1:nrow(d)) {
     )
   )
 }
+
+save(noun_to_verb_sentence, type_token_words_sentence, type_token_dpos_sentence, 
+     type_token_dep_sentence, dependency_ratio_sentence, mlu_sentence, 
+     embeddedness_sentence, depth_data_sentence, file = "sentence_complexity_l2.rda",
+     compress = "xz")
+
+
+rm(list = ls())
+load('sentence_complexity_l2.rda')
+depth_data_sentence$sentence_id = as.character(depth_data_sentence$sentence_id)
+
+list_df = list(dependency_ratio_sentence, 
+               depth_data_sentence, 
+               embeddedness_sentence,
+               mlu_sentence,
+               noun_to_verb_sentence,
+               type_token_dep_sentence,
+               type_token_dpos_sentence,
+               type_token_words_sentence
+)
+all_sentence_l2 <- list_df %>% reduce(full_join, by = c("language", 
+                                                     "column_name",
+                                                     "sentence_id"))
+
+save(all_sentence_l2, file = "sentence_l2_summary.rda")

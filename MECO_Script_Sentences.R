@@ -1,11 +1,14 @@
+rm(list = ls())
 library(readr)
 library(udpipe)
 library(dplyr)
 library(tidyverse)
+library(tidyr)
+library(stringr)
 
 # Load the CSV file.
-yourfile <- read_csv("C:/Users/buzat/Downloads/supp_texts.csv")
-
+#yourfile <- read_csv("C:/Users/buzat/Downloads/supp_texts.csv")
+yourfile <- readxl::read_xlsx("supp_texts.xlsx")
 # ------------------------ English ----------------------------
 
 # Find the row corresponding to the language "English"
@@ -479,7 +482,7 @@ noun_to_verb_sentence <- tibble(
   sentence_id = character(),
   num_noun = integer(),
   num_verbs = integer(),
-  ratio = double(),
+  n_v_ratio = double(),
   language = character(),
   column_name = character()
 )
@@ -514,7 +517,7 @@ for (language in languages) {
       summarise(
         num_noun = sum(NOUN),
         num_verbs = sum(VERB),
-        ratio = sum(NOUN) / sum(VERB),
+        n_v_ratio = sum(NOUN) / sum(VERB),
         language = language,
         column_name = name
       ) 
@@ -531,7 +534,8 @@ for (language in languages) {
 noun_to_verb_sentence <- noun_to_verb_sentence %>%
   filter(!is.na(sentence_id) & sentence_id != "")
 
-
+table(noun_to_verb_sentence$num_verbs == 0, noun_to_verb_sentence$language)
+#quite a few sentences have no lexical verbs in them.
 
 # ------------------------ Type-Token Ratio of Words (TTR-w) ----------------------------
 
@@ -545,7 +549,7 @@ languages <- c("english", "dutch", "estonian", "finnish",
                "norwegian", "russian", "spanish", "turkish")
 
 # Create an empty data frame to store the results
-type_token_words <- tibble(
+type_token_words_sentence <- tibble(
   sentence_id = character(),
   num_types = integer(),
   num_tokens = integer(),
@@ -582,12 +586,12 @@ for (language in languages) {
     count_lang$sentence_id <- as.character(count_lang$sentence_id)
     
     # Add the information to type_token_words
-    type_token_words <- bind_rows(type_token_words, count_lang)
+    type_token_words_sentence <- bind_rows(type_token_words_sentence, count_lang)
   }
 }
 
 # Remove rows with empty or null sentence_id
-type_token_words <- type_token_words %>%
+type_token_words_sentence <- type_token_words_sentence %>%
   filter(!is.na(sentence_id) & sentence_id != "")
 
 
@@ -595,7 +599,7 @@ type_token_words <- type_token_words %>%
 # ------------------------ Type-Token Ratio DPOS (TTR_p) ----------------------------
 
 # Create an empty data frame to store the results
-type_token_dpos <- tibble(
+type_token_dpos_sentence <- tibble(
   sentence_id = character(),
   num_p_types = integer(),
   ttr_p = double(),
@@ -630,19 +634,19 @@ for (language in languages) {
     count_lang$sentence_id <- as.character(count_lang$sentence_id)
     
     # Add the information to type_token_dpos
-    type_token_dpos <- bind_rows(type_token_dpos, count_lang)
+    type_token_dpos_sentence <- bind_rows(type_token_dpos_sentence, count_lang)
   }
 }
 
 # Remove rows with empty or null sentence_id
-type_token_dpos <- type_token_dpos %>%
+type_token_dpos_sentence <- type_token_dpos_sentence %>%
   filter(!is.na(sentence_id) & sentence_id != "")
 
 
 # ------------------------ Type-Token Ratio Dep (TTR_d) ----------------------------
 
 # Create an empty data frame to store the results
-type_token_dep <- tibble(
+type_token_dep_sentence <- tibble(
   sentence_id = character(),
   num_d_types = integer(),
   ttr_d = double(),
@@ -677,12 +681,12 @@ for (language in languages) {
     count_lang$sentence_id <- as.character(count_lang$sentence_id)
     
     # Add the information to type_token_dep
-    type_token_dep <- bind_rows(type_token_dep, count_lang)
+    type_token_dep_sentence <- bind_rows(type_token_dep_sentence, count_lang)
   }
 }
 
 # Remove rows with empty or null sentence_id
-type_token_dep <- type_token_dep %>%
+type_token_dep_sentence <- type_token_dep_sentence %>%
   filter(!is.na(sentence_id) & sentence_id != "")
 
 
@@ -844,7 +848,7 @@ embeddedness_sentence <- embeddedness_sentence %>%
 
 # ------------------------ Longest dependency path (LDP) ----------------------------
 # Create an empty data frame to store the results
-depth_data <- tibble(
+depth_data_sentence <- tibble(
   column_name = character(),
   language = character(),
   sentence_id = integer(),
@@ -892,8 +896,8 @@ for (language in languages) {
     my_depth$sentence_id <- as.numeric(substr(my_depth$doc_sent_id, 1 + regexpr(pattern = "_", text = my_depth$doc_sent_id), nchar(my_depth$doc_sent_id)))
     
     # Add information to depth_data
-    depth_data <- bind_rows(
-      depth_data,
+    depth_data_sentence <- bind_rows(
+      depth_data_sentence,
       tibble(
         column_name = name,
         language = language,
@@ -904,3 +908,27 @@ for (language in languages) {
   }
 }
 
+
+save(noun_to_verb_sentence, type_token_words_sentence, type_token_dpos_sentence, 
+     type_token_dep_sentence, dependency_ratio_sentence, mlu_sentence, 
+     embeddedness_sentence, depth_data_sentence, file = "sentence_complexity.rda",
+     compress = "xz")
+
+rm(list = ls())
+load('sentence_complexity.rda')
+depth_data_sentence$sentence_id = as.character(depth_data_sentence$sentence_id)
+
+list_df = list(dependency_ratio_sentence, 
+               depth_data_sentence, 
+               embeddedness_sentence,
+               mlu_sentence,
+               noun_to_verb_sentence,
+               type_token_dep_sentence,
+               type_token_dpos_sentence,
+               type_token_words_sentence
+               )
+all_sentence <- list_df %>% reduce(full_join, by = c("language", 
+                                            "column_name",
+                                            "sentence_id"))
+
+save(all_sentence, file = "sentence_summary.rda")

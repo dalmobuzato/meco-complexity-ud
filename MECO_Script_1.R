@@ -1,10 +1,14 @@
+rm(list = ls())
 library(readr)
 library(udpipe)
 library(dplyr)
 library(tidyverse)
+library(tidyr)
+library(stringr)
 
 # Load the CSV file.
-yourfile <- read_csv("C:/Users/buzat/Downloads/supp_texts.csv")
+#yourfile <- read_csv("C:/Users/buzat/Downloads/supp_texts.csv")
+yourfile <- readxl::read_xlsx("supp_texts.xlsx")
 
 # ------------------------ English ----------------------------
 
@@ -476,10 +480,10 @@ languages <- c("english", "dutch", "estonian", "finnish",
 
 # Create an empty data frame to store the results
 noun_to_verb <- tibble(
-  name_text = character(),
+  column_name = character(),
   num_noun = integer(),
   num_verbs = integer(),
-  ratio = double(),
+  n_v_ratio = double(),
   language = character()
 )
 
@@ -510,10 +514,10 @@ for (language in languages) {
     noun_to_verb <- bind_rows(
       noun_to_verb,
       tibble(
-        name_text = name_lang,
+        column_name = name_lang,
         num_noun = num_noun_lang,
         num_verbs = num_verb_lang,
-        ratio = ratio_lang,
+        n_v_ratio = ratio_lang,
         language = language
       )
     )
@@ -855,4 +859,32 @@ for (language in languages) {
     )
   }
 }
+
+#need to calculate the average per passage
+depth_data <- depth_data %>% group_by(language, column_name) %>%
+  summarize(mean_depth = mean(depth))
+
+
+save(noun_to_verb, type_token_words, type_token_dpos, 
+     type_token_dep, dependency_ratio, mlu_data, 
+     embeddedness_data, depth_data, file = "passage_complexity.rda",
+     compress = "xz")
+
+
+rm(list = ls())
+load('passage_complexity.rda')
+
+list_df = list(dependency_ratio, 
+               depth_data, 
+               embeddedness_data,
+               mlu_data,
+               noun_to_verb,
+               type_token_dep,
+               type_token_dpos,
+               type_token_words
+)
+all_passage <- list_df %>% reduce(full_join, by = c("language", 
+                                                     "column_name"))
+
+save(all_passage, file = "passage_summary.rda")
 
