@@ -31,8 +31,8 @@ for (i in 1:nrow(d)) {
 # ------------------------ Lexico-syntactic variables ----------------------------
 # ------------------------ Noun-to-Verb Ratio ----------------------------
 # Create an empty data frame to store the results
-noun_to_verb_sentence <- tibble(
-  sentence_id = character(),
+noun_to_verb_passage <- tibble(
+  doc_id = character(),
   num_noun = integer(),
   num_verbs = integer(),
   n_v_ratio = double(),
@@ -52,7 +52,7 @@ for (i in 1:nrow(d)) {
   # Filter rows based on the condition
   count_lang <- current_df %>%
     filter(upos %in% c("VERB", "NOUN")) %>%
-    group_by(sentence_id, upos) %>%
+    group_by(doc_id, upos) %>%
     summarise(occurrences = n())
   
   # Pivot the data frame to wide format for easy ratio calculation
@@ -63,9 +63,9 @@ for (i in 1:nrow(d)) {
   count_lang_wide <- count_lang_wide %>%
     mutate(ratio = NOUN / VERB)  # Use column names directly
   
-  # Summarize by sentence_id
+  # Summarize by doc_id
   count_lang_summarized <- count_lang_wide %>%
-    group_by(sentence_id) %>%
+    group_by(doc_id) %>%
     summarise(
       num_noun = sum(NOUN),
       num_verbs = sum(VERB),
@@ -74,20 +74,20 @@ for (i in 1:nrow(d)) {
       column_name = paste0("line_", i)
     ) 
   
-  # Convert sentence_id to character before combining data frames
-  count_lang_summarized$sentence_id <- as.character(count_lang_summarized$sentence_id)
+  # Convert doc_id to character before combining data frames
+  count_lang_summarized$doc_id <- as.character(count_lang_summarized$doc_id)
   
-  # Add the information to noun_to_verb_sentence
-  noun_to_verb_sentence <- bind_rows(noun_to_verb_sentence, count_lang_summarized)
+  # Add the information to noun_to_verb_passage
+  noun_to_verb_passage <- bind_rows(noun_to_verb_passage, count_lang_summarized)
 }
 
 # Remove rows with empty or null sentence_id
-noun_to_verb_sentence <- noun_to_verb_sentence %>%
-  filter(!is.na(sentence_id) & sentence_id != "")
+noun_to_verb_passage <- noun_to_verb_passage %>%
+  filter(!is.na(doc_id) & doc_id != "")
 # ------------------------ Type-Token Ratio of Words (TTR-w) ----------------------------
 # Create an empty data frame to store the results
 type_token_words <- tibble(
-  sentence_id = character(),
+  doc_id = character(),
   num_types = integer(),
   num_tokens = integer(),
   ratio = double(),
@@ -109,7 +109,7 @@ for (i in 1:nrow(d)) {
   
   # Calculate num_types and num_tokens
   count_lang <- current_df %>%
-    group_by(sentence_id) %>%
+    group_by(doc_id) %>%
     summarise(
       num_types = length(unique(token)),
       num_tokens = n(),
@@ -118,21 +118,21 @@ for (i in 1:nrow(d)) {
       column_name = paste0("line_", i)
     )
   
-  # Convert sentence_id to character before combining data frames
-  count_lang$sentence_id <- as.character(count_lang$sentence_id)
+  # Convert doc_id to character before combining data frames
+  count_lang$doc_id <- as.character(count_lang$doc_id)
   
   # Add the information to type_token_words
   type_token_words <- bind_rows(type_token_words, count_lang)
 }
 
-# Remove rows with empty or null sentence_id
+# Remove rows with empty or null doc_id
 type_token_words <- type_token_words %>%
-  filter(!is.na(sentence_id) & sentence_id != "")
+  filter(!is.na(doc_id) & doc_id != "")
 
 # ------------------------ Type-Token Ratio DPOS (TTR_p) ----------------------------
 # Create an empty data frame to store the results
 type_token_dpos <- tibble(
-  sentence_id = character(),
+  doc_id = character(),
   num_p_types = integer(),
   ttr_p = double(),
   language = character(),
@@ -153,7 +153,7 @@ for (i in 1:nrow(d)) {
   
   # Calculate num_p_types
   count_lang <- current_df %>%
-    group_by(sentence_id) %>%
+    group_by(doc_id) %>%
     summarise(
       num_p_types = length(unique(upos)),
       ttr_p = length(unique(upos)) / n(),
@@ -161,20 +161,20 @@ for (i in 1:nrow(d)) {
       column_name = paste0("line_", i)
     )
   
-  # Convert sentence_id to character before combining data frames
-  count_lang$sentence_id <- as.character(count_lang$sentence_id)
+  # Convert doc_id to character before combining data frames
+  count_lang$doc_id <- as.character(count_lang$doc_id)
   
   # Add the information to type_token_dpos
   type_token_dpos <- bind_rows(type_token_dpos, count_lang)
 }
 
-# Remove rows with empty or null sentence_id
+# Remove rows with empty or null doc_id
 type_token_dpos <- type_token_dpos %>%
-  filter(!is.na(sentence_id) & sentence_id != "")
+  filter(!is.na(doc_id) & doc_id != "")
 # ------------------------ Type-Token Ratio Dep (TTR_d) ----------------------------
 # Create an empty data frame to store the results
 type_token_dep <- tibble(
-  sentence_id = character(),
+  doc_id = character(),
   num_d_types = integer(),
   ttr_d = double(),
   language = character(),
@@ -195,7 +195,7 @@ for (i in 1:nrow(d)) {
   
   # Calculate num_d_types
   count_lang <- current_df %>%
-    group_by(sentence_id) %>%
+    group_by(doc_id) %>%
     summarise(
       num_d_types = length(unique(dep_rel)),
       ttr_d = length(unique(dep_rel)) / n(),
@@ -203,21 +203,21 @@ for (i in 1:nrow(d)) {
       column_name = paste0("line_", i)
     )
   
-  # Convert sentence_id to character before combining data frames
-  count_lang$sentence_id <- as.character(count_lang$sentence_id)
+  # Convert doc_id to character before combining data frames
+  count_lang$doc_id <- as.character(count_lang$doc_id)
   
   # Add the information to type_token_dep
   type_token_dep <- bind_rows(type_token_dep, count_lang)
 }
 
-# Remove rows with empty or null sentence_id
+# Remove rows with empty or null doc_id
 type_token_dep <- type_token_dep %>%
-  filter(!is.na(sentence_id) & sentence_id != "")
+  filter(!is.na(doc_id) & doc_id != "")
 
 # ------------------------ Dependency Ratio (d-ratio) ----------------------------
 # Create an empty data frame to store the results
-dependency_ratio_sentence <- tibble(
-  sentence_id = character(),
+dependency_ratio_pessage <- tibble(
+  doc_id = character(),
   language = character(),
   d_ratio = double(),
   column_name = character()
@@ -232,15 +232,15 @@ for (i in 1:nrow(d)) {
   current_annotation <- udpipe_annotate(model, x = current_text)
   current_df <- as.data.frame(current_annotation)
   
-  # Calculate n_heads and n_tokens per sentence_id
+  # Calculate n_heads and n_tokens per doc_id
   head_token_counts <- current_df %>%
-    group_by(sentence_id) %>%
+    group_by(doc_id) %>%
     summarise(
       n_heads = length(unique(head_token_id)),
       n_tokens = n()
     )
   
-  # Calculate d_ratio per sentence_id
+  # Calculate d_ratio per doc_id
   head_token_counts <- head_token_counts %>%
     mutate(
       d_ratio = 1 - (n_heads / n_tokens),
@@ -248,21 +248,21 @@ for (i in 1:nrow(d)) {
       column_name = paste0("line_", i)
     )
   
-  # Convert sentence_id to character before combining data frames
-  head_token_counts$sentence_id <- as.character(head_token_counts$sentence_id)
+  # Convert doc_id to character before combining data frames
+  head_token_counts$doc_id <- as.character(head_token_counts$doc_id)
   
-  # Add the information to dependency_ratio_sentence
-  dependency_ratio_sentence <- bind_rows(dependency_ratio_sentence, head_token_counts)
+  # Add the information to dependency_ratio_pessage
+  dependency_ratio_pessage <- bind_rows(dependency_ratio_pessage, head_token_counts)
 }
 
-# Remove rows with empty or null sentence_id
-dependency_ratio_sentence <- dependency_ratio_sentence %>%
-  filter(!is.na(sentence_id) & sentence_id != "")
+# Remove rows with empty or null doc_id
+dependency_ratio_pessage <- dependency_ratio_pessage %>%
+  filter(!is.na(doc_id) & doc_id != "")
 
 # ------------------------ Mean Length of Utterance (MLU) ----------------------------
 # Create an empty data frame to store the results
-mlu_sentence <- tibble(
-  sentence_id = character(),
+mlu_pessage <- tibble(
+  doc_id = character(),
   language = character(),
   mlu = double(),
   column_name = character()
@@ -280,29 +280,29 @@ for (i in 1:nrow(d)) {
   # Filter out rows with dep_rel as punctuation
   current_df <- current_df[current_df$dep_rel != "PUNCT", ]
   
-  # Ensure sentence_id is character type
-  current_df$sentence_id <- as.character(current_df$sentence_id)
+  # Ensure doc_id is character type
+  current_df$doc_id <- as.character(current_df$doc_id)
   
-  # Calculate mlu per sentence_id
-  mlu_per_sentence <- current_df %>%
-    group_by(sentence_id) %>%
+  # Calculate mlu per doc_id
+  mlu_per_pessage <- current_df %>%
+    group_by(doc_id) %>%
     summarise(
       mlu = mean(length(unique(token_id))),
       language = "english-l2",  
       column_name = paste0("line_", i)
     )
   
-  # Add information to mlu_sentence
-  mlu_sentence <- bind_rows(mlu_sentence, mlu_per_sentence)
+  # Add information to mlu_pessage
+  mlu_pessage <- bind_rows(mlu_pessage, mlu_per_pessage)
 }
 
-# Remove rows with empty or null sentence_id
-mlu_sentence <- mlu_sentence %>%
-  filter(!is.na(sentence_id) & sentence_id != "")
+# Remove rows with empty or null doc_id
+mlu_pessage <- mlu_pessage %>%
+  filter(!is.na(doc_id) & doc_id != "")
 # ------------------------ Embeddedness ----------------------------
 # Create an empty data frame to store the results
-embeddedness_sentence <- tibble(
-  sentence_id = character(),
+embeddedness_pessage <- tibble(
+  doc_id = character(),
   language = character(),
   embeddedness = double(),
   num_complex_sentences = double(),
@@ -322,7 +322,7 @@ for (i in 1:nrow(d)) {
   
   # Identify complex sentences
   current_df <- current_df %>%
-    group_by(sentence_id) %>% 
+    group_by(doc_id) %>% 
     mutate(is_complex = if_else(
       any(dep_rel %in% c("parataxis", "xcomp", "ccomp", "advcl", "acl:relcl", "acl", "conj", "cc", "mark")), 1, 0)
     ) %>% 
@@ -330,24 +330,24 @@ for (i in 1:nrow(d)) {
   
   # Keep only the first row of each group (slice(1))
   df_complexity <- current_df %>%
-    group_by(sentence_id) %>% 
+    group_by(doc_id) %>% 
     slice(1) %>% 
-    select(is_complex, sentence_id) %>%  # Ensure the sentence_id column is selected
+    select(is_complex, doc_id) %>%  # Ensure the doc_id column is selected
     ungroup()
   
-  # Ensure sentence_id is character type
-  df_complexity$sentence_id <- as.character(df_complexity$sentence_id)
+  # Ensure doc_id is character type
+  df_complexity$doc_id <- as.character(df_complexity$doc_id)
   
-  # Calculate Embeddedness per sentence_id
+  # Calculate Embeddedness per doc_id
   num_complex_sentences <- sum(df_complexity$is_complex)
   num_simplex_sentences <- nrow(df_complexity) - num_complex_sentences
   embeddedness <- 1 - (num_complex_sentences / num_simplex_sentences)
   
-  # Add information to embeddedness_sentence
-  embeddedness_sentence <- bind_rows(
-    embeddedness_sentence,
+  # Add information to embeddedness_pessage
+  embeddedness_pessage <- bind_rows(
+    embeddedness_pessage,
     tibble(
-      sentence_id = unique(df_complexity$sentence_id),
+      doc_id = unique(df_complexity$doc_id),
       language = "english-l2",  
       embeddedness = embeddedness,
       num_complex_sentences = num_complex_sentences,
@@ -358,16 +358,16 @@ for (i in 1:nrow(d)) {
   )
 }
 
-# Remove rows with empty or null sentence_id
-embeddedness_sentence <- embeddedness_sentence %>%
-  filter(!is.na(sentence_id) & sentence_id != "")
+# Remove rows with empty or null doc_id
+embeddedness_pessage <- embeddedness_pessage %>%
+  filter(!is.na(doc_id) & doc_id != "")
 
 # ------------------------ Longest dependency path (LDP) ----------------------------
 # Create an empty data frame to store the results
-depth_data_sentence <- tibble(
+depth_data_pessage <- tibble(
   column_name = character(),
   language = character(),
-  sentence_id = integer(),
+  doc_id = integer(),
   depth = double()
 )
 
@@ -392,7 +392,7 @@ for (i in 1:nrow(d)) {
     
     # Calculate max depth 
     x <- tmp_depth[!is.na(tmp_depth$head_token_id), ]
-    x <- x[x$sentence_id %in% min(x$sentence_id), ]
+    x <- x[x$doc_id %in% min(x$doc_id), ]
     edges <- x[x$head_token_id != 0, c("token_id", "head_token_id")]
     
     # Get number of branches
@@ -407,42 +407,42 @@ for (i in 1:nrow(d)) {
   tmp_doc_id <- current_df %>% select(doc_id, doc_sent_id) %>% distinct(doc_sent_id, .keep_all = TRUE)
   my_depth <- left_join(my_depth, tmp_doc_id, by = "doc_sent_id")
   
-  # Extract sentence_id
-  my_depth$sentence_id <- as.numeric(substr(my_depth$doc_sent_id, 1 + regexpr(pattern = "_", text = my_depth$doc_sent_id), nchar(my_depth$doc_sent_id)))
+  # Extract doc_id
+  my_depth$doc_id <- as.numeric(substr(my_depth$doc_sent_id, 1 + regexpr(pattern = "_", text = my_depth$doc_sent_id), nchar(my_depth$doc_sent_id)))
   
   # Add information to depth_data
-  depth_data_sentence <- bind_rows(
-    depth_data_sentence,
+  depth_data_pessage <- bind_rows(
+    depth_data_pessage,
     tibble(
       column_name = paste0("line_", i),
       language = "english-l2",  
-      sentence_id = my_depth$sentence_id,
+      doc_id = my_depth$doc_id,
       depth = my_depth$depth
     )
   )
 }
 
-save(noun_to_verb_sentence, type_token_words_sentence, type_token_dpos_sentence, 
-     type_token_dep_sentence, dependency_ratio_sentence, mlu_sentence, 
-     embeddedness_sentence, depth_data_sentence, file = "sentence_complexity_l2.rda",
+save(noun_to_verb_passage, type_token_words, type_token_dpos, 
+     type_token_dep, dependency_ratio_pessage, mlu_pessage, 
+     embeddedness_pessage, depth_data_pessage, file = "sentence_complexity_l2.rda",
      compress = "xz")
 
 
 rm(list = ls())
-load('sentence_complexity_l2.rda')
-depth_data_sentence$sentence_id = as.character(depth_data_sentence$sentence_id)
+load('pessage_complexity_l2.rda')
+depth_data_pessage$sentence_id = as.character(depth_data_pessage$sentence_id)
 
-list_df = list(dependency_ratio_sentence, 
-               depth_data_sentence, 
-               embeddedness_sentence,
-               mlu_sentence,
-               noun_to_verb_sentence,
+list_df = list(dependency_ratio_pessage, 
+               depth_data_pessage, 
+               embeddedness_pessage,
+               mlu_pessage,
+               noun_to_verb_passage,
                type_token_dep,
                type_token_dpos,
                type_token_words
 )
 all_sentence_l2 <- list_df %>% reduce(full_join, by = c("language", 
-                                                     "column_name",
-                                                     "sentence_id"))
+                                                        "column_name",
+                                                        "sentence_id"))
 
-save(all_sentence_l2, file = "sentence_l2_summary.rda")
+save(all_sentence_l2, file = "pessage_l2_summary.rda")
