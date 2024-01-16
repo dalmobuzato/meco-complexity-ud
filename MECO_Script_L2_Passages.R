@@ -216,7 +216,7 @@ type_token_dep <- type_token_dep %>%
 
 # ------------------------ Dependency Ratio (d-ratio) ----------------------------
 # Create an empty data frame to store the results
-dependency_ratio_pessage <- tibble(
+dependency_ratio_passage <- tibble(
   doc_id = character(),
   language = character(),
   d_ratio = double(),
@@ -251,17 +251,17 @@ for (i in 1:nrow(d)) {
   # Convert doc_id to character before combining data frames
   head_token_counts$doc_id <- as.character(head_token_counts$doc_id)
   
-  # Add the information to dependency_ratio_pessage
-  dependency_ratio_pessage <- bind_rows(dependency_ratio_pessage, head_token_counts)
+  # Add the information to dependency_ratio_passage
+  dependency_ratio_passage <- bind_rows(dependency_ratio_passage, head_token_counts)
 }
 
 # Remove rows with empty or null doc_id
-dependency_ratio_pessage <- dependency_ratio_pessage %>%
+dependency_ratio_passage <- dependency_ratio_passage %>%
   filter(!is.na(doc_id) & doc_id != "")
 
 # ------------------------ Mean Length of Utterance (MLU) ----------------------------
 # Create an empty data frame to store the results
-mlu_pessage <- tibble(
+mlu_passage <- tibble(
   doc_id = character(),
   language = character(),
   mlu = double(),
@@ -284,7 +284,7 @@ for (i in 1:nrow(d)) {
   current_df$doc_id <- as.character(current_df$doc_id)
   
   # Calculate mlu per doc_id
-  mlu_per_pessage <- current_df %>%
+  mlu_per_passage <- current_df %>%
     group_by(doc_id) %>%
     summarise(
       mlu = mean(length(unique(token_id))),
@@ -292,16 +292,16 @@ for (i in 1:nrow(d)) {
       column_name = paste0("line_", i)
     )
   
-  # Add information to mlu_pessage
-  mlu_pessage <- bind_rows(mlu_pessage, mlu_per_pessage)
+  # Add information to mlu_passage
+  mlu_passage <- bind_rows(mlu_passage, mlu_per_passage)
 }
 
 # Remove rows with empty or null doc_id
-mlu_pessage <- mlu_pessage %>%
+mlu_passage <- mlu_passage %>%
   filter(!is.na(doc_id) & doc_id != "")
 # ------------------------ Embeddedness ----------------------------
 # Create an empty data frame to store the results
-embeddedness_pessage <- tibble(
+embeddedness_passage <- tibble(
   doc_id = character(),
   language = character(),
   embeddedness = double(),
@@ -343,9 +343,9 @@ for (i in 1:nrow(d)) {
   num_simplex_sentences <- nrow(df_complexity) - num_complex_sentences
   embeddedness <- 1 - (num_complex_sentences / num_simplex_sentences)
   
-  # Add information to embeddedness_pessage
-  embeddedness_pessage <- bind_rows(
-    embeddedness_pessage,
+  # Add information to embeddedness_passage
+  embeddedness_passage <- bind_rows(
+    embeddedness_passage,
     tibble(
       doc_id = unique(df_complexity$doc_id),
       language = "english-l2",  
@@ -359,12 +359,12 @@ for (i in 1:nrow(d)) {
 }
 
 # Remove rows with empty or null doc_id
-embeddedness_pessage <- embeddedness_pessage %>%
+embeddedness_passage <- embeddedness_passage %>%
   filter(!is.na(doc_id) & doc_id != "")
 
 # ------------------------ Longest dependency path (LDP) ----------------------------
 # Create an empty data frame to store the results
-depth_data_pessage <- tibble(
+depth_data_passage <- tibble(
   column_name = character(),
   language = character(),
   doc_id = integer(),
@@ -411,8 +411,8 @@ for (i in 1:nrow(d)) {
   my_depth$doc_id <- as.numeric(substr(my_depth$doc_sent_id, 1 + regexpr(pattern = "_", text = my_depth$doc_sent_id), nchar(my_depth$doc_sent_id)))
   
   # Add information to depth_data
-  depth_data_pessage <- bind_rows(
-    depth_data_pessage,
+  depth_data_passage <- bind_rows(
+    depth_data_passage,
     tibble(
       column_name = paste0("line_", i),
       language = "english-l2",  
@@ -423,19 +423,19 @@ for (i in 1:nrow(d)) {
 }
 
 save(noun_to_verb_passage, type_token_words, type_token_dpos, 
-     type_token_dep, dependency_ratio_pessage, mlu_pessage, 
-     embeddedness_pessage, depth_data_pessage, file = "sentence_complexity_l2.rda",
+     type_token_dep, dependency_ratio_passage, mlu_passage, 
+     embeddedness_passage, depth_data_passage, file = "sentence_complexity_l2.rda",
      compress = "xz")
 
 
 rm(list = ls())
-load('pessage_complexity_l2.rda')
-depth_data_pessage$sentence_id = as.character(depth_data_pessage$sentence_id)
+load('passage_complexity_l2.rda')
+depth_data_passage$sentence_id = as.character(depth_data_passage$sentence_id)
 
-list_df = list(dependency_ratio_pessage, 
-               depth_data_pessage, 
-               embeddedness_pessage,
-               mlu_pessage,
+list_df = list(dependency_ratio_passage, 
+               depth_data_passage, 
+               embeddedness_passage,
+               mlu_passage,
                noun_to_verb_passage,
                type_token_dep,
                type_token_dpos,
@@ -445,4 +445,4 @@ all_sentence_l2 <- list_df %>% reduce(full_join, by = c("language",
                                                         "column_name",
                                                         "sentence_id"))
 
-save(all_sentence_l2, file = "pessage_l2_summary.rda")
+save(all_sentence_l2, file = "passage_l2_summary.rda")
