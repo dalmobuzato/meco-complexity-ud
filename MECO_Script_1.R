@@ -31,9 +31,13 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
+  
 }
 
 # English: Create a language model and udpipe texts 
@@ -68,9 +72,12 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Dutch: Create a language model and udpipe texts 
@@ -105,9 +112,12 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Estonian: Create a language model and udpipe texts 
@@ -142,9 +152,13 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
+
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Finnish: Create a language model and udpipe texts 
@@ -178,9 +192,13 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
+  
 }
 
 # German: Create a language model and udpipe texts 
@@ -213,9 +231,13 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
+
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Greek: Create a language model and udpipe texts 
@@ -248,9 +270,12 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Hebrew: Create a language model and udpipe texts 
@@ -282,9 +307,13 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
+
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Italian: Create a language model and udpipe texts 
@@ -316,9 +345,13 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
+
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Korean: Create a language model and udpipe texts 
@@ -350,9 +383,13 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
+
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Norwegian: Create a language model and udpipe texts 
@@ -384,9 +421,12 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Russian: Create a language model and udpipe texts 
@@ -418,9 +458,12 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Spanish: Create a language model and udpipe texts 
@@ -452,9 +495,12 @@ column_names <- c('Janus', 'Shaka', 'Doping',
                   'Thylacine', 'World', 'Monocole', 'Wine', 'Orange',
                   'Beekeeping', 'National', 'International', 'Vehicle')
 
-# Loop to remove "\n", "\" and """
 for (column_name in column_names) {
+  # Loop to remove "\n", "\" and """
   assign(column_name, gsub("[\"\\\\\n]", "", get(column_name)))
+  
+  # Replace !, ?, and ; with .
+  assign(column_name, gsub("[!\\?;]", ".", get(column_name)))
 }
 
 # Turkish: Create a language model and udpipe texts 
@@ -780,7 +826,7 @@ for (language in languages) {
     # Calculate Embeddedness
     num_complex_sentences <- sum(df_complexity$is_complex)
     num_simplex_sentences <- nrow(df_complexity) - num_complex_sentences
-    embeddedness <- 1 - (num_complex_sentences / num_simplex_sentences)
+    embeddedness <- (num_simplex_sentences / num_complex_sentences)
     
     # Add information to embeddedness_data
     embeddedness_data <- bind_rows(
