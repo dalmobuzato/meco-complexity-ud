@@ -4,7 +4,7 @@ This project contains scripts with the main objective of analyzing text complexi
 - **MECO_SCRIPT_Sentences** -> This script calculates measures for each sentence in each text and language. 
 - **MECO_SCRIPT_L2** -> This script calculates measures for texts read by L2 participants in English. (sentence measures) 
 - **MECO_SCRIPT_L2_Passages** -> This script calculates measures for texts read by L2 participants in English. (passage measures)
-- **descriptive_sent.txt** -> the tab-separated text file reporting descriptive statistics (mean, sd, min, max) for eye-tracking and text complexity measures at the sentence level\
+- **descriptive_sent.txt** -> the tab-separated text file reporting descriptive statistics (mean, sd, min, max) for eye-tracking and text complexity measures at the sentence level
   * firstpass - first-pass sentence reading time (the summed duration of all fixations landing in the sentence region of interest before the gaze left the sentence for the first time
   * total - total sentence reading time (the summed duration of all fixations landing in the sentence region of interest)
   * rate - reading rate (words per minute)
